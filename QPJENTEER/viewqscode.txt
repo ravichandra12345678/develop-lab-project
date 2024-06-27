@@ -1,0 +1,58 @@
+<%@page import="com.voidmain.pojo.Question"%>
+<%@page import="com.voidmain.dao.HibernateTemplate"%>
+<%@page import="com.voidmain.dao.HibernateDAO"%>
+<%@page import="java.util.List"%>
+<%@include file="header.jsp"%>
+
+<div id="site_content">
+	<div id="content">
+	
+		<table style="width: 100%; border-spacing: 0;">
+
+			<tr>
+				<th>ID</th>
+				<th>Question</th>
+				<th>Unit</th>
+				<th>Marks</th>
+				<th>Difficulty Level</th>
+				<th>Delete</th>
+			</tr>
+			<%
+				for (Question question : HibernateDAO.getQuestions()) {
+					
+					if(question.getFid().equals(username))
+					{
+			%>
+						<tr>
+							<td><%=question.getId()%></td>
+							<td><%=question.getQuestion()%></td>
+							<td><%=question.getUnit()%></td>
+							<td><%=question.getMarks()%></td>
+							<td><%=question.getDificultylevel()%></td>
+							<td> <a href="viewquestions.jsp?id=<%=question.getId()%>">delete</a></td>
+						</tr>
+					<%
+					 }
+				}
+				%>
+		</table>
+		
+		<%
+			String id=request.getParameter("id");
+		
+			if(id!=null)
+			{
+				if(HibernateTemplate.deleteObject(Question.class,Integer.parseInt(id))==1)
+				{
+					response.sendRedirect("viewquestions.jsp?status=success");
+				}
+				else
+				{
+					response.sendRedirect("viewquestions.jsp?status=failed");
+				}
+			}
+		%>
+		
+	</div>
+</div>
+<%@include file="footer.jsp"%

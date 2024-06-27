@@ -1,0 +1,25 @@
+http://localhost:2525/DynamicQuestionPaperGeneration/
+
+Admin
+--------------------
+Login (username:admin, password:admin)
+
+Add Faculty
+View Faculties
+Delete Faculty
+
+Generate Question Paper
+
+Logout
+
+
+Faculty
+-------------------
+Login
+
+Add Question
+View Questions
+Upload Question
+Delete Question
+
+Logout

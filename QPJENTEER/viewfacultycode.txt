@@ -1,0 +1,83 @@
+<%@page import="com.voidmain.pojo.Faculty"%>
+<%@page import="com.voidmain.dao.HibernateTemplate"%>
+<%@page import="com.voidmain.dao.HibernateDAO"%>
+<%@page import="java.util.List"%>
+<%@include file="header.jsp"%>
+
+<div id="site_content">
+	<div id="content">
+		<!-- insert the page content here -->
+
+		<%
+			String status = request.getParameter("status");
+
+			if (status != null) {
+		%>
+		<h1><%=status%></h1>
+		<%
+			} else {
+		%>
+		<h1>View Faculties</h1>
+		<%
+			}
+		%>
+
+		<table style="width: 100%; border-spacing: 0;">
+			
+			<tr>
+				<th>ID</th>
+				<th>Name</th>
+				<th>Email</th>
+				<th>Mobile</th>
+				<th>Department</th>
+				<th>Subject</th>
+				<th>Delete</th>
+			</tr>
+			
+			<%
+				if(role.equals("admin"))
+				{
+			%>
+					<%
+						for (Faculty faculty : HibernateDAO.getFacultys()) {
+					%>
+			
+					
+							<tr>
+								<td><%=faculty.getId()%></td>
+								<td><%=faculty.getName()%></td>
+								<td><%=faculty.getEmail()%></td>
+								<td><%=faculty.getMobile()%></td>
+								<td><%=faculty.getDepartment()%></td>
+								<td><%=faculty.getSubject()%></td>
+								<td> <a href="viewfaculty.jsp?id=<%=faculty.getId()%>">delete</a></td>
+							</tr>
+								
+					<%
+						}
+					%>
+			<%
+				}
+			%>
+			
+			<%
+			String id=request.getParameter("id");
+		
+			if(id!=null)
+			{
+				if(HibernateTemplate.deleteObject(Faculty.class,id)==1)
+				{
+					response.sendRedirect("viewfaculty.jsp?status=success");
+				}
+				else
+				{
+					response.sendRedirect("viewfaculty.jsp?status=failed");
+				}
+			}
+		%>
+			
+		</table>
+		
+	</div>
+</div>
+<%@include file="footer.jsp"%>

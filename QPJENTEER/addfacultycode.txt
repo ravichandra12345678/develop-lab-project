@@ -1,0 +1,82 @@
+<%@page import="java.io.InputStream"%>
+<%@page import="java.io.FileInputStream"%>
+<%@page import="com.voidmain.pojo.Faculty"%>
+<%@page import="java.util.Date"%>
+<%@include file="header.jsp"%>
+<%@page import="com.voidmain.service.PDFGenerator"%>
+<%@page import="com.voidmain.dao.HibernateDAO"%>
+<%@page import="com.voidmain.pojo.Faculty"%>
+
+<div id="content">
+
+	<!-- insert the page content here -->
+	<%
+		String status = request.getParameter("status");
+
+		if (status != null) {
+	%>
+	<h1><%=status%></h1>
+	<%
+		} else {
+	%>
+	<h1>Generate Question Paper</h1>
+	<%
+		}
+	%>
+
+	<form action="generatepaper.jsp" name="appform">
+
+		<div class="form_settings">
+			<p>
+				<span>Select Subject</span> <select name="subject"
+					required="required">
+					<%
+						for (Faculty faculty : HibernateDAO.getFacultys()) {
+					%>
+					<option value="<%=faculty.getSubject()%>"><%=faculty.getSubject()%></option>
+					<%
+						}
+					%>
+				</select>
+			</p>
+			<p>
+				<span>Select Difficulty Level</span> <select name="difficulty"
+					required="required">
+					<option value="">--select</option>
+					<option value="easy">Easy</option>
+					<option value="difficult">Difficult</option>
+				</select>
+			</p>
+			<p style="padding-top: 15px">
+				<span>&nbsp;</span><input class="submit" type="submit"
+					name="contact_submitted" value="Generate"
+					onclick="return validate()" />
+			</p>
+		</div>
+	</form>
+
+
+	<%
+		String subject = request.getParameter("subject");
+		String dificulty = request.getParameter("difficulty");
+
+		if (subject != null && dificulty != null) {
+			
+			try
+			{
+				if (PDFGenerator.printPDF(subject, dificulty)) {
+					
+					response.sendRedirect("generatepaper.jsp?status=success");
+				
+				} else {
+					response.sendRedirect("generatepaper.jsp?status=failed");
+				}
+			}
+			catch(Exception e)
+			{
+				response.sendRedirect("generatepaper.jsp?status=Please Upload Sufficient Questions");
+			}
+		}
+	%>
+</div>
+<%@include file="footer.jsp"%>
